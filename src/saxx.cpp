@@ -4,20 +4,20 @@
 
 template <typename Char, typename Index>
 int simple_esaxx(
-        Char*  const t,
-        Index* const sa,
-        Index* const l,
-        Index* const r,
-        Index* const d,
-        Index  const n,
-        Index  const k,
-        Index&       m)
+        Char const* const t,
+        Index*      const sa,
+        Index*      const l,
+        Index*      const r,
+        Index*      const d,
+        Index       const n,
+        Index       const k,
+        Index&            m)
 {
     return esaxx(t, sa, l, r, d, n, k, m);
 }
 
 
-#define def_esaxx(CharBits, IndexBits) int esaxx_c##CharBits##i##IndexBits(uint##CharBits##_t* const t, int##IndexBits##_t* const sa, int##IndexBits##_t* const l, int##IndexBits##_t* const r, int##IndexBits##_t* const d, int##IndexBits##_t const n, int##IndexBits##_t const k, int##IndexBits##_t* m) { return simple_esaxx(t, sa, l, r, d, n, k, *m); }
+#define def_esaxx(CharBits, IndexBits) int esaxx_c##CharBits##i##IndexBits(uint##CharBits##_t const* const t, int##IndexBits##_t* const sa, int##IndexBits##_t* const l, int##IndexBits##_t* const r, int##IndexBits##_t* const d, int##IndexBits##_t const n, int##IndexBits##_t const k, int##IndexBits##_t* const m) { return simple_esaxx(t, sa, l, r, d, n, k, *m); }
 extern "C" {
     def_esaxx(8, 8)
     def_esaxx(8, 16)
