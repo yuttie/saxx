@@ -5,6 +5,7 @@ use std::result;
 pub use libc::c_int;
 
 
+/// Raw bindings to C functions `esaxx_*()`.
 extern "C" {
     pub fn esaxx_c8i8  (t: *const  u8, sa: *mut  i8, l: *mut  i8, r: *mut  i8, d: *mut  i8, n:  i8, k:  i8, m: *mut  i8) -> c_int;
     pub fn esaxx_c8i16 (t: *const  u8, sa: *mut i16, l: *mut i16, r: *mut i16, d: *mut i16, n: i16, k: i16, m: *mut i16) -> c_int;
@@ -25,10 +26,15 @@ extern "C" {
 }
 
 
+/// An error type for representing error values returned from the underlying C++ function `esaxx()`.
+///
+/// A value of this type can be either -1 or -2.
 pub type Error = i8;
 
+/// A specialized `Result` type with the error type `saxx::Error`.
 pub type Result<T> = result::Result<T, Error>;
 
+/// Representation of a computed extended suffix array.
 pub struct Esa<T> {
     pub sa: Vec<T>,
     pub l: Vec<T>,
@@ -38,6 +44,7 @@ pub struct Esa<T> {
 }
 
 
+/// A type that can be passed to `esaxx()`.
 pub trait Esaxx<Index> {
     fn esaxx(t: &Self) -> Result<Esa<Index>>;
 }
