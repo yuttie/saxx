@@ -2,7 +2,7 @@ extern crate libc;
 
 
 use std::result;
-use libc::c_int;
+pub use libc::c_int;
 
 
 extern "C" {
