@@ -34,7 +34,7 @@ pub type Error = i8;
 /// A specialized `Result` type with the error type `saxx::Error`.
 pub type Result<T> = result::Result<T, Error>;
 
-/// Representation of a computed extended suffix array.
+/// Representation of a computed enhanced suffix array.
 pub struct Esa<T> {
     pub sa: Vec<T>,
     pub l: Vec<T>,
