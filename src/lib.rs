@@ -49,11 +49,14 @@ macro_rules! impl_esaxx_for_slice {
             fn esaxx(t: &[$char]) -> Result<Esa<$index>> {
                 let length = t.len();
                 let max_char: $char = *t.iter().max().unwrap_or(&0);
-                assert!(length <= <$index>::max_value() as usize);
-                assert!(max_char <= <$index>::max_value() as $char);
 
+                assert!(length <= <$index>::max_value() as usize);
+                assert!(max_char as u64 <= <$index>::max_value() as u64);
+
+                // These conversions are safe because of the above assertions
                 let n: $index = length as $index;
                 let k: $index = max_char as $index;
+
                 let mut sa: Vec<$index> = Vec::new();
                 let mut  l: Vec<$index> = Vec::new();
                 let mut  r: Vec<$index> = Vec::new();
