@@ -43,37 +43,58 @@ pub trait Esaxx<Index> {
 }
 
 
-impl Esaxx<i8> for [u8] {
-    fn esaxx(t: &[u8]) -> Result<Esa<i8>> {
-        let length = t.len();
-        let max_char: u8 = *t.iter().max().unwrap_or(&0);
-        assert!(length <= i8::max_value() as usize);
-        assert!(max_char <= i8::max_value() as u8);
+macro_rules! impl_esaxx_for_slice {
+    ( $char: ty, $index: ty, $esaxx_fn: expr ) => {
+        impl Esaxx<$index> for [$char] {
+            fn esaxx(t: &[$char]) -> Result<Esa<$index>> {
+                let length = t.len();
+                let max_char: $char = *t.iter().max().unwrap_or(&0);
+                assert!(length <= <$index>::max_value() as usize);
+                assert!(max_char <= <$index>::max_value() as $char);
 
-        let n: i8 = length as i8;
-        let k: i8 = max_char as i8;
-        let mut sa: Vec<i8> = Vec::new();
-        let mut  l: Vec<i8> = Vec::new();
-        let mut  r: Vec<i8> = Vec::new();
-        let mut  d: Vec<i8> = Vec::new();
-        let mut  m: i8 = 0;
+                let n: $index = length as $index;
+                let k: $index = max_char as $index;
+                let mut sa: Vec<$index> = Vec::new();
+                let mut  l: Vec<$index> = Vec::new();
+                let mut  r: Vec<$index> = Vec::new();
+                let mut  d: Vec<$index> = Vec::new();
+                let mut  m: $index = 0;
 
-        let ret = unsafe {
-            esaxx_c8i8(t.as_ptr(),
-                       sa.as_mut_ptr(),
-                       l.as_mut_ptr(),
-                       r.as_mut_ptr(),
-                       d.as_mut_ptr(),
-                       n as i8,
-                       k as i8,
-                       &mut m as *mut i8) as Error
-        };
+                let ret = unsafe {
+                    $esaxx_fn(t.as_ptr(),
+                              sa.as_mut_ptr(),
+                              l.as_mut_ptr(),
+                              r.as_mut_ptr(),
+                              d.as_mut_ptr(),
+                              n as $index,
+                              k as $index,
+                              &mut m as *mut $index) as Error
+                };
 
-        if ret == 0 {
-            Ok(Esa { sa, l, r, d, m })
+                if ret == 0 {
+                    Ok(Esa { sa, l, r, d, m })
+                }
+                else {
+                    Err(ret)
+                }
+            }
         }
-        else {
-            Err(ret)
-        }
-    }
+    };
 }
+
+impl_esaxx_for_slice!( u8,  i8, esaxx_c8i8);
+impl_esaxx_for_slice!( u8, i16, esaxx_c8i16);
+impl_esaxx_for_slice!( u8, i32, esaxx_c8i32);
+impl_esaxx_for_slice!( u8, i64, esaxx_c8i64);
+impl_esaxx_for_slice!(u16,  i8, esaxx_c16i8);
+impl_esaxx_for_slice!(u16, i16, esaxx_c16i16);
+impl_esaxx_for_slice!(u16, i32, esaxx_c16i32);
+impl_esaxx_for_slice!(u16, i64, esaxx_c16i64);
+impl_esaxx_for_slice!(u32,  i8, esaxx_c32i8);
+impl_esaxx_for_slice!(u32, i16, esaxx_c32i16);
+impl_esaxx_for_slice!(u32, i32, esaxx_c32i32);
+impl_esaxx_for_slice!(u32, i64, esaxx_c32i64);
+impl_esaxx_for_slice!(u64,  i8, esaxx_c64i8);
+impl_esaxx_for_slice!(u64, i16, esaxx_c64i16);
+impl_esaxx_for_slice!(u64, i32, esaxx_c64i32);
+impl_esaxx_for_slice!(u64, i64, esaxx_c64i64);
